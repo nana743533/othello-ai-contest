@@ -484,10 +484,10 @@ Bitboard g_currentBoard;
 
 void parseInitialInput() {
     string line;
-    getline(cin, line);
+    if (!getline(cin, line)) return;
     g_playerId = stoi(line);
 
-    getline(cin, line);
+    if (!getline(cin, line)) return;
     g_boardSize = stoi(line);
 
     cerr << "Player ID: " << g_playerId << ", Board size: " << g_boardSize << endl;
@@ -497,16 +497,17 @@ void parseTurnInput(vector<string>& legalMoves) {
     string boardStr;
     for (int i = 0; i < g_boardSize; i++) {
         string line;
-        getline(cin, line);
+        if (!getline(cin, line)) return;
         boardStr += line;
     }
 
-    getline(cin, line);
+    string line;
+    if (!getline(cin, line)) return;
     int actionCount = stoi(line);
 
     legalMoves.clear();
     for (int i = 0; i < actionCount; i++) {
-        getline(cin, line);
+        if (!getline(cin, line)) return;
         while (!line.empty() && (line.back() == ' ' || line.back() == '\t' || line.back() == '\r')) {
             line.pop_back();
         }
@@ -547,7 +548,7 @@ int main() {
     try {
         parseInitialInput();
 
-        while (true) {
+        while (cin) {
             vector<string> legalMoves;
             parseTurnInput(legalMoves);
 
