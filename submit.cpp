@@ -179,99 +179,43 @@ public:
 
 class Evaluator {
 public:
+    // 各マスの静的な重み（オセロの定石に基づく）
+    // 角: 2714, C Squares: -577, 辺中央: -18～69, 内部: -122～-379
+    static constexpr int CELL_WEIGHT[64] = {
+        2714,  147,   69,  -18,  -18,   69,  147, 2714,
+         147, -577, -186, -153, -153, -186, -577,  147,
+          69, -186, -379, -122, -122, -379, -186,   69,
+         -18, -153, -122, -169, -169, -122, -153,  -18,
+         -18, -153, -122, -169, -169, -122, -153,  -18,
+          69, -186, -379, -122, -122, -379, -186,   69,
+         147, -577, -186, -153, -153, -186, -577,  147,
+        2714,  147,   69,  -18,  -18,   69,  147, 2714
+    };
+
     static Score evaluate(const Bitboard& board) {
-        double progress = getProgress(board);
-        double w = 1.0 - progress;
-
-        Score mobility = evaluateMobility(board);
-        Score corner = evaluateCorner(board);
-        Score stability = evaluateStability(board);
-        Score parity = evaluateCoinParity(board);
-
-        // 動的ウェイト
-        Score mobW = static_cast<Score>(100 * w + 50 * (1 - w));
-        Score corW = static_cast<Score>(800 * w + 400 * (1 - w));
-        Score stabW = static_cast<Score>(100 * w + 500 * (1 - w));
-        Score parW = static_cast<Score>(0 * w + 100 * (1 - w));
-
-        return mobW * mobility + corW * corner + stabW * stability + parW * parity;
-    }
-
-private:
-    static double getProgress(const Bitboard& board) {
-        return 1.0 - (board.getEmptyCount() / 60.0);
-    }
-
-    static Score evaluateMobility(const Bitboard& board) {
-        uint64_t myMoves = board.getLegalMoves();
-        int myMob = __builtin_popcountll(myMoves);
-        uint64_t oppMoves = board.swap().getLegalMoves();
-        int oppMob = __builtin_popcountll(oppMoves);
-        return myMob - oppMob;
-    }
-
-    static Score evaluateCorner(const Bitboard& board) {
-        int myCorners = __builtin_popcountll(board.player & CORNER_MASK);
-        int oppCorners = __builtin_popcountll(board.opponent & CORNER_MASK);
-        int score = 3 * (myCorners - oppCorners);
-
-        int myXS = __builtin_popcountll(board.player & X_SQUARES_MASK);
-        int oppXS = __builtin_popcountll(board.opponent & X_SQUARES_MASK);
-        score -= 2 * (myXS - oppXS);
-
-        return score;
-    }
-
-    static Score evaluateStability(const Bitboard& board) {
-        int stable = 0;
-        int corners[4] = {0, 7, 56, 63};
-
-        for (int corner : corners) {
-            if ((board.player & (1ULL << corner)) == 0) continue;
-
-            if (corner == 0) {
-                for (int x = 0; x < 8; x++) {
-                    if ((board.player & (1ULL << x)) == 0) break;
-                    stable++;
-                }
-                for (int y = 0; y < 8; y++) {
-                    if ((board.player & (1ULL << (y * 8))) == 0) break;
-                    stable++;
-                }
-            } else if (corner == 7) {
-                for (int x = 7; x >= 0; x--) {
-                    if ((board.player & (1ULL << x)) == 0) break;
-                    stable++;
-                }
-                for (int y = 0; y < 8; y++) {
-                    if ((board.player & (1ULL << (y * 8 + 7))) == 0) break;
-                    stable++;
-                }
-            } else if (corner == 56) {
-                for (int x = 0; x < 8; x++) {
-                    if ((board.player & (1ULL << (56 + x))) == 0) break;
-                    stable++;
-                }
-                for (int y = 7; y >= 0; y--) {
-                    if ((board.player & (1ULL << (y * 8))) == 0) break;
-                    stable++;
-                }
-            } else if (corner == 63) {
-                for (int x = 7; x >= 0; x--) {
-                    if ((board.player & (1ULL << (56 + x))) == 0) break;
-                    stable++;
-                }
-                for (int y = 7; y >= 0; y--) {
-                    if ((board.player & (1ULL << (y * 8 + 7))) == 0) break;
-                    stable++;
-                }
+        // 位置評価（各石の位置に応じた重みの合計）
+        Score positionScore = 0;
+        for (int i = 0; i < 64; i++) {
+            if (board.player & (1ULL << i)) {
+                positionScore += CELL_WEIGHT[i];
+            } else if (board.opponent & (1ULL << i)) {
+                positionScore -= CELL_WEIGHT[i];
             }
         }
-        return stable / 2;
-    }
 
-    static Score evaluateCoinParity(const Bitboard& board) {
-        return board.getPlayerCount() - board.getOpponentCount();
+        // Mobility評価（着手可能数の差）
+        int myMob = __builtin_popcountll(board.getLegalMoves());
+        int oppMob = __builtin_popcountll(board.swap().getLegalMoves());
+        Score mobilityScore = (myMob - oppMob) * 50;
+
+        // 進行度に応じて石数差を少し考慮
+        int emptyCount = board.getEmptyCount();
+        Score parityScore = 0;
+        if (emptyCount < 20) {
+            parityScore = (board.getPlayerCount() - board.getOpponentCount()) * (20 - emptyCount);
+        }
+
+        return positionScore + mobilityScore + parityScore;
     }
 };
 
@@ -299,7 +243,7 @@ public:
         string bestMove = moves[0];
         Score bestScore = -MAX_SCORE;
 
-        for (int depth = 1; depth <= 10; depth++) {
+        for (int depth = 1; depth <= 14; depth++) {
             if (isTimeUp()) break;
 
             Score alpha = -MAX_SCORE;
@@ -352,14 +296,26 @@ private:
             legalMoves &= (legalMoves - 1);
         }
 
-        // Move ordering
+        // Move ordering（良い手を先に探索）
         sort(moves.begin(), moves.end(), [](const string& a, const string& b) {
             int aBit = coordToBit(a), bBit = coordToBit(b);
             bool aIsCorner = (CORNER_MASK & (1ULL << aBit)) != 0;
             bool bIsCorner = (CORNER_MASK & (1ULL << bBit)) != 0;
+            bool aIsCSquare = (X_SQUARES_MASK & (1ULL << aBit)) != 0;
+            bool bIsCSquare = (X_SQUARES_MASK & (1ULL << bBit)) != 0;
+
+            // 角を最優先
             if (aIsCorner && !bIsCorner) return true;
             if (!aIsCorner && bIsCorner) return false;
-            return aBit < bBit;
+
+            // C Squaresを最後に
+            if (aIsCSquare && !bIsCSquare) return false;
+            if (!aIsCSquare && bIsCSquare) return true;
+
+            // その他は位置の重みで順序付け
+            int aWeight = Evaluator::CELL_WEIGHT[aBit];
+            int bWeight = Evaluator::CELL_WEIGHT[bBit];
+            return aWeight > bWeight;
         });
 
         Bitboard firstBoard = board.placeAndFlip(moves[0]);
@@ -519,8 +475,8 @@ void parseTurnInput(vector<string>& legalMoves) {
 string chooseMove(const vector<string>& legalMoves) {
     if (legalMoves.empty()) return "pass";
 
-    // 終盤ソルバー
-    if (EndgameSolver::isApplicable(g_currentBoard, 15)) {
+    // 終盤ソルバー（残り22マス以下で完全読み）
+    if (EndgameSolver::isApplicable(g_currentBoard, 22)) {
         string move = EndgameSolver::solve(g_currentBoard);
 
         for (const auto& legal : legalMoves) {
