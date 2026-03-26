@@ -16,23 +16,16 @@ int main() {
     // プレイヤーID
     if (!getline(cin, line)) return 0;
     int playerId = stoi(line);
-    cerr << "Player ID: " << playerId << " (" << (playerId == 0 ? "Black" : "White") << ")" << endl;
 
     // 盤面サイズ
     if (!getline(cin, line)) return 0;
     int boardSize = stoi(line);
-    cerr << "Board size: " << boardSize << endl;
 
     // ===== ゲームループ =====
-    int turn = 1;
     while (cin) {
-        cerr << "\n=== Turn " << turn << " ===" << endl;
-
-        // 盤面の状態
-        cerr << "Board state:" << endl;
+        // 盤面の状態（読み飛ばし）
         for (int i = 0; i < boardSize; i++) {
             if (!getline(cin, line)) return 0;
-            cerr << "  " << line << endl;
         }
 
         // Expert Modeの追加入力（条件付き）
@@ -42,9 +35,8 @@ int main() {
         // 合法手の数
         if (!getline(cin, line)) return 0;
         int actionCount = stoi(line);
-        cerr << "Legal moves: " << actionCount << endl;
 
-        // 合法手のリスト
+        // 合法手のリスト（読み飛ばし）
         string firstMove = "pass";
         for (int i = 0; i < actionCount; i++) {
             if (!getline(cin, line)) return 0;
@@ -52,20 +44,15 @@ int main() {
             while (!line.empty() && (line.back() == ' ' || line.back() == '\t' || line.back() == '\r')) {
                 line.pop_back();
             }
-            if (i == 0) firstMove = line; // 最初の手を保存
-            cerr << "  " << line << endl;
+            if (i == 0) firstMove = line;
         }
 
-        // 指し手を出力（座標のみ、coutに送信される）
+        // 指し手を出力（座標のみ）
         if (actionCount > 0) {
             cout << firstMove << endl;
-            cerr << ">>> Output: " << firstMove << endl;
         } else {
             cout << "pass" << endl;
-            cerr << ">>> Output: pass" << endl;
         }
-
-        turn++;
     }
 
     return 0;
