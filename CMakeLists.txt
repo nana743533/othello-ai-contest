@@ -30,7 +30,8 @@ target_include_directories(othello_ai PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9fd7188a2d5d74e146297b4.zip
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
@@ -55,17 +56,17 @@ if(BUILD_TESTS)
     # ビットボードテスト
     add_executable(bitboard_test tests/bitboard_test.cpp)
     target_link_libraries(bitboard_test gtest_main othello_ai_lib)
-    gtest_discover_tests(bitboard_test)
+    add_test(NAME bitboard_test COMMAND bitboard_test)
 
     # 評価関数テスト
     add_executable(evaluator_test tests/evaluator_test.cpp)
     target_link_libraries(evaluator_test gtest_main othello_ai_lib)
-    gtest_discover_tests(evaluator_test)
+    add_test(NAME evaluator_test COMMAND evaluator_test)
 
     # 探索テスト
     add_executable(search_test tests/search_test.cpp)
     target_link_libraries(search_test gtest_main othello_ai_lib)
-    gtest_discover_tests(search_test)
+    add_test(NAME search_test COMMAND search_test)
 endif()
 
 # インストール設定
