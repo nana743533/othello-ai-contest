@@ -203,10 +203,10 @@ public:
             }
         }
 
-        // Mobility評価（着手可能数の差）
+        // Mobility評価（着手可能数の差、重みは小さく）
         int myMob = __builtin_popcountll(board.getLegalMoves());
         int oppMob = __builtin_popcountll(board.swap().getLegalMoves());
-        Score mobilityScore = (myMob - oppMob) * 50;
+        Score mobilityScore = (myMob - oppMob) * 10;
 
         // 進行度に応じて石数差を少し考慮
         int emptyCount = board.getEmptyCount();
