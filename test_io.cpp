@@ -1,6 +1,6 @@
 // ========================================
 // CodinGame Othello AI - I/Oテスト用
-// 入力をそのまま表示するだけのシンプル版
+// 入力を確認して指し手を出力（座標のみ）
 // ========================================
 
 #include <iostream>
@@ -14,46 +14,55 @@ int main() {
     string line;
 
     // プレイヤーID
-    getline(cin, line);
+    if (!getline(cin, line)) return 0;
     int playerId = stoi(line);
-    cout << "Player ID: " << playerId << " (" << (playerId == 0 ? "Black/先手" : "White/後手") << ")" << endl;
+    cerr << "Player ID: " << playerId << " (" << (playerId == 0 ? "Black" : "White") << ")" << endl;
 
     // 盤面サイズ
-    getline(cin, line);
+    if (!getline(cin, line)) return 0;
     int boardSize = stoi(line);
-    cout << "Board size: " << boardSize << endl;
+    cerr << "Board size: " << boardSize << endl;
 
     // ===== ゲームループ =====
     int turn = 1;
-    while (true) {
-        cout << "\n=== Turn " << turn << " ===" << endl;
+    while (cin) {
+        cerr << "\n=== Turn " << turn << " ===" << endl;
 
         // 盤面の状態
-        cout << "Board state:" << endl;
+        cerr << "Board state:" << endl;
         for (int i = 0; i < boardSize; i++) {
-            getline(cin, line);
-            cout << "  " << line << endl;
+            if (!getline(cin, line)) return 0;
+            cerr << "  " << line << endl;
         }
+
+        // Expert Modeの追加入力（条件付き）
+        // 注: 前ターンでEXPERTを出力していた場合、ここで追加の入力が来る
+        // 今回は使用しないのでスキップ
 
         // 合法手の数
-        getline(cin, line);
+        if (!getline(cin, line)) return 0;
         int actionCount = stoi(line);
-        cout << "Legal moves: " << actionCount << endl;
+        cerr << "Legal moves: " << actionCount << endl;
 
         // 合法手のリスト
-        cout << "Moves: ";
+        string firstMove = "pass";
         for (int i = 0; i < actionCount; i++) {
-            getline(cin, line);
-            cout << line;
-            if (i < actionCount - 1) cout << ", ";
+            if (!getline(cin, line)) return 0;
+            // 余分な空白を削除
+            while (!line.empty() && (line.back() == ' ' || line.back() == '\t' || line.back() == '\r')) {
+                line.pop_back();
+            }
+            if (i == 0) firstMove = line; // 最初の手を保存
+            cerr << "  " << line << endl;
         }
-        cout << endl;
 
-        // とりあえず最初の手を出力
+        // 指し手を出力（座標のみ、coutに送信される）
         if (actionCount > 0) {
-            cout << ">>> Output: " << line << endl << endl;
+            cout << firstMove << endl;
+            cerr << ">>> Output: " << firstMove << endl;
         } else {
-            cout << ">>> Output: pass" << endl << endl;
+            cout << "pass" << endl;
+            cerr << ">>> Output: pass" << endl;
         }
 
         turn++;
