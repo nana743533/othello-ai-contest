@@ -16,12 +16,12 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -march=native")
 # メインの実行ファイル
 add_executable(othello_ai
     src/main.cpp
-    src/bitboard.cpp
-    src/evaluator.cpp
-    src/simple_evaluator.cpp
-    src/search.cpp
-    src/transposition_table.cpp
-    src/endgame_solver.cpp
+    src/core/bitboard.cpp
+    src/evaluators/evaluator.cpp
+    src/evaluators/simple_evaluator.cpp
+    src/search/search.cpp
+    src/search/endgame_solver.cpp
+    src/utils/transposition_table.cpp
 )
 
 # インクルードディレクトリ
@@ -46,12 +46,12 @@ if(BUILD_TESTS)
 
     # テスト用のライブラリ
     add_library(othello_ai_lib
-        src/bitboard.cpp
-        src/evaluator.cpp
-        src/simple_evaluator.cpp
-        src/search.cpp
-        src/transposition_table.cpp
-        src/endgame_solver.cpp
+        src/core/bitboard.cpp
+        src/evaluators/evaluator.cpp
+        src/evaluators/simple_evaluator.cpp
+        src/search/search.cpp
+        src/search/endgame_solver.cpp
+        src/utils/transposition_table.cpp
     )
     target_include_directories(othello_ai_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
