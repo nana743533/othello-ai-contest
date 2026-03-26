@@ -52,8 +52,8 @@ SearchResult SearchEngine::iterativeDeepening(const Bitboard& board, int timeout
         SearchResult currentResult;
         currentResult.depth = depth;
 
-        Score alpha = -Evaluator::MAX_SCORE;
-        Score beta = Evaluator::MAX_SCORE;
+        Score alpha = -MAX_SCORE;
+        Score beta = MAX_SCORE;
 
         // 各手を探索
         for (const auto& move : legalMoves) {
@@ -103,8 +103,8 @@ Score SearchEngine::negascout(const Bitboard& board, int depth, Score alpha, Sco
         if (swapped.getLegalMoves() == 0) {
             // ゲーム終了：石数差を返す
             int diff = board.getPlayerCount() - board.getOpponentCount();
-            if (diff > 0) return Evaluator::MAX_SCORE - diff;
-            if (diff < 0) return -Evaluator::MAX_SCORE + diff;
+            if (diff > 0) return MAX_SCORE - diff;
+            if (diff < 0) return -MAX_SCORE + diff;
             return 0;
         }
         // 相手の番へ（盤面を入れ替えずに探索継続）
