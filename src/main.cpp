@@ -13,13 +13,11 @@ using namespace othello;
 int g_playerId = -1;       // 0=黒(先手), 1=白(後手)
 int g_boardSize = 8;
 Bitboard g_currentBoard;
-bool g_useExpertMode = false;
 
 // プロトタイプ宣言
 void parseInitialInput();
 void parseTurnInput(std::vector<std::string>& legalMoves);
 std::string chooseMove(const std::vector<std::string>& legalMoves);
-std::string outputMove(const std::string& move, const std::string& msg = "");
 
 int main() {
     try {
@@ -34,13 +32,8 @@ int main() {
             // 最善手を選択
             std::string bestMove = chooseMove(legalMoves);
 
-            // 出力
-            std::cout << outputMove(bestMove) << std::endl;
-
-            // Expert Modeを次ターンも有効にする場合、EXPERTを付ける
-            if (g_useExpertMode) {
-                std::cout << "EXPERT" << std::endl;
-            }
+            // 出力（座標のみ）
+            std::cout << bestMove << std::endl;
         }
 
     } catch (const std::exception& e) {
@@ -146,11 +139,4 @@ std::string chooseMove(const std::vector<std::string>& legalMoves) {
     // 探索結果が非法手なら、合法手の最初を返す
     std::cerr << "Warning: Search returned illegal move, using first legal move" << std::endl;
     return legalMoves[0];
-}
-
-std::string outputMove(const std::string& move, const std::string& msg) {
-    if (msg.empty()) {
-        return move;
-    }
-    return move + " MSG " + msg;
 }
