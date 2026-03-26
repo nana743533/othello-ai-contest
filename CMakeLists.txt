@@ -67,6 +67,11 @@ if(BUILD_TESTS)
     add_executable(search_test tests/search_test.cpp)
     target_link_libraries(search_test gtest_main othello_ai_lib)
     add_test(NAME search_test COMMAND search_test)
+
+    # I/Oテスト2
+    add_executable(test_io2_test tests/test_io2_test.cpp)
+    target_link_libraries(test_io2_test gtest_main)
+    add_test(NAME test_io2_test COMMAND test_io2_test)
 endif()
 
 # インストール設定
