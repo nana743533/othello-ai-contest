@@ -9,6 +9,9 @@ namespace othello {
 // 評価値の型（スコア範囲を大きく取る）
 using Score = int64_t;
 
+// 最大評価値
+constexpr Score MAX_SCORE = 1000000;
+
 // 評価関数
 class Evaluator {
 public:
@@ -45,9 +48,6 @@ public:
     static int countStable(const Bitboard& board, uint64_t stones);
 
 private:
-    // 最大評価値
-    static constexpr Score MAX_SCORE = 1000000;
-
     // 各段階の重み（序盤、中盤、終盤）
     static constexpr Weights OPENING_WEIGHTS = {100, 800, 100, 0};
     static constexpr Weights MIDGAME_WEIGHTS = {80, 600, 300, 50};
