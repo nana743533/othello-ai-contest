@@ -18,6 +18,7 @@ add_executable(othello_ai
     src/main.cpp
     src/bitboard.cpp
     src/evaluator.cpp
+    src/simple_evaluator.cpp
     src/search.cpp
     src/transposition_table.cpp
     src/endgame_solver.cpp
@@ -47,6 +48,7 @@ if(BUILD_TESTS)
     add_library(othello_ai_lib
         src/bitboard.cpp
         src/evaluator.cpp
+        src/simple_evaluator.cpp
         src/search.cpp
         src/transposition_table.cpp
         src/endgame_solver.cpp
@@ -72,6 +74,11 @@ if(BUILD_TESTS)
     add_executable(test_io2_test tests/test_io2_test.cpp)
     target_link_libraries(test_io2_test gtest_main)
     add_test(NAME test_io2_test COMMAND test_io2_test)
+
+    # Simple Evaluatorテスト
+    add_executable(simple_evaluator_test tests/simple_evaluator_test.cpp)
+    target_link_libraries(simple_evaluator_test gtest_main othello_ai_lib)
+    add_test(NAME simple_evaluator_test COMMAND simple_evaluator_test)
 endif()
 
 # インストール設定
