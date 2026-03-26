@@ -251,7 +251,7 @@ public:
                 if (isTimeUp()) break;
 
                 Bitboard nextBoard = board.placeAndFlip(move);
-                Score score = -negascout(nextBoard.swap(), depth - 1, -MAX_SCORE, MAX_SCORE);
+                Score score = -negalpha(nextBoard.swap(), depth - 1, -MAX_SCORE, MAX_SCORE);
 
                 if (score > alpha) {
                     alpha = score;
@@ -269,7 +269,7 @@ private:
     int timeoutMs_;
     uint64_t nodeCount_ = 0;
 
-    Score negascout(const Bitboard& board, int depth, Score alpha, Score beta) {
+    Score negalpha(const Bitboard& board, int depth, Score alpha, Score beta) {
         nodeCount_++;
 
         if (depth == 0) {
@@ -286,7 +286,7 @@ private:
                 if (diff < 0) return -MAX_SCORE + diff;
                 return 0;
             }
-            return -negascout(swapped, depth - 1, -beta, -alpha);
+            return -negalpha(swapped, depth - 1, -beta, -alpha);
         }
 
         vector<string> moves;
@@ -318,29 +318,19 @@ private:
             return aWeight > bWeight;
         });
 
-        Bitboard firstBoard = board.placeAndFlip(moves[0]);
-        Score score = -negascout(firstBoard.swap(), depth - 1, -beta, -alpha);
-
-        if (score >= beta) return score;
-        alpha = max(alpha, score);
-
-        for (size_t i = 1; i < moves.size(); i++) {
+        Score maxScore = -MAX_SCORE;
+        for (const auto& move : moves) {
             if (isTimeUp()) break;
 
-            Bitboard nextBoard = board.placeAndFlip(moves[i]);
-            Score bound = -negascout(nextBoard.swap(), depth - 1, -alpha - 1, -alpha);
+            Bitboard nextBoard = board.placeAndFlip(move);
+            Score score = -negalpha(nextBoard.swap(), depth - 1, -beta, -alpha);
 
-            if (bound > alpha && bound < beta) {
-                score = -negascout(nextBoard.swap(), depth - 1, -beta, -bound);
-            } else {
-                score = bound;
-            }
-
-            if (score > alpha) alpha = score;
-            if (alpha >= beta) break;
+            if (score >= beta) return score;  // Beta cut-off
+            alpha = max(alpha, score);
+            maxScore = max(maxScore, score);
         }
 
-        return alpha;
+        return maxScore;
     }
 
     bool isTimeUp() const {
