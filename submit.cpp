@@ -489,8 +489,6 @@ void parseInitialInput() {
 
     if (!getline(cin, line)) return;
     g_boardSize = stoi(line);
-
-    cerr << "Player ID: " << g_playerId << ", Board size: " << g_boardSize << endl;
 }
 
 void parseTurnInput(vector<string>& legalMoves) {
@@ -516,8 +514,6 @@ void parseTurnInput(vector<string>& legalMoves) {
 
     bool isBlack = (g_playerId == 0);
     g_currentBoard = Bitboard::fromString(boardStr, isBlack);
-
-    cerr << "Legal moves: " << actionCount << endl;
 }
 
 string chooseMove(const vector<string>& legalMoves) {
@@ -525,7 +521,6 @@ string chooseMove(const vector<string>& legalMoves) {
 
     // 終盤ソルバー
     if (EndgameSolver::isApplicable(g_currentBoard, 15)) {
-        cerr << "Using endgame solver" << endl;
         string move = EndgameSolver::solve(g_currentBoard);
 
         for (const auto& legal : legalMoves) {
@@ -557,8 +552,7 @@ int main() {
             cout << bestMove << endl;
         }
 
-    } catch (const exception& e) {
-        cerr << "Error: " << e.what() << endl;
+    } catch (...) {
         return 1;
     }
 
