@@ -27,7 +27,7 @@ int main() {
         parseInitialInput();
 
         // ゲームループ
-        while (true) {
+        while (std::cin) {
             std::vector<std::string> legalMoves;
             parseTurnInput(legalMoves);
 
@@ -54,11 +54,11 @@ int main() {
 void parseInitialInput() {
     // プレイヤーID
     std::string line;
-    std::getline(std::cin, line);
+    if (!std::getline(std::cin, line)) return;
     g_playerId = std::stoi(line);
 
     // 盤面サイズ
-    std::getline(std::cin, line);
+    if (!std::getline(std::cin, line)) return;
     g_boardSize = std::stoi(line);
 
     // 標準エラーに出力（デバッグ用）
@@ -70,7 +70,7 @@ void parseTurnInput(std::vector<std::string>& legalMoves) {
     std::string boardStr;
     for (int i = 0; i < g_boardSize; i++) {
         std::string line;
-        std::getline(std::cin, line);
+        if (!std::getline(std::cin, line)) return;
         boardStr += line;
     }
 
@@ -80,13 +80,13 @@ void parseTurnInput(std::vector<std::string>& legalMoves) {
 
     // 合法手の数
     std::string line;
-    std::getline(std::cin, line);
+    if (!std::getline(std::cin, line)) return;
     int actionCount = std::stoi(line);
 
     // 合法手のリスト
     legalMoves.clear();
     for (int i = 0; i < actionCount; i++) {
-        std::getline(std::cin, line);
+        if (!std::getline(std::cin, line)) return;
         // 余分な空白を削除
         while (!line.empty() && (line.back() == ' ' || line.back() == '\t' || line.back() == '\r')) {
             line.pop_back();
