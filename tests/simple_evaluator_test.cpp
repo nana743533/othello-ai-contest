@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "simple_evaluator.h"
+#include "evaluators/simple_evaluator.h"
 
 using namespace othello;
 

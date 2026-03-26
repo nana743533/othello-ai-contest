@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "search.h"
-#include "endgame_solver.h"
-#include "bitboard.h"
+#include "search/search.h"
+#include "search/endgame_solver.h"
+#include "core/bitboard.h"
 
 using namespace othello;
 

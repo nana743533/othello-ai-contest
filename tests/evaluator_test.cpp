@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "evaluator.h"
-#include "bitboard.h"
+#include "evaluators/evaluator.h"
+#include "core/bitboard.h"
 
 using namespace othello;
 

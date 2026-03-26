@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "bitboard.h"
+#include "core/bitboard.h"
 
 using namespace othello;
 

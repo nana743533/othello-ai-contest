@@ -1,7 +1,7 @@
-#include "bitboard.h"
-#include "evaluator.h"
-#include "search.h"
-#include "endgame_solver.h"
+#include "core/bitboard.h"
+#include "evaluators/evaluator.h"
+#include "search/search.h"
+#include "search/endgame_solver.h"
 #include <iostream>
 #include <string>
 #include <vector>
