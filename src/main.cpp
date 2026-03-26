@@ -37,7 +37,6 @@ int main() {
         }
 
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
 
@@ -53,9 +52,6 @@ void parseInitialInput() {
     // 盤面サイズ
     if (!std::getline(std::cin, line)) return;
     g_boardSize = std::stoi(line);
-
-    // 標準エラーに出力（デバッグ用）
-    std::cerr << "Player ID: " << g_playerId << ", Board size: " << g_boardSize << std::endl;
 }
 
 void parseTurnInput(std::vector<std::string>& legalMoves) {
@@ -90,13 +86,6 @@ void parseTurnInput(std::vector<std::string>& legalMoves) {
     // 盤面を構築（黒=Player0, 白=Player1）
     bool isBlack = (g_playerId == 0);
     g_currentBoard = Bitboard::fromString(boardStr, isBlack);
-
-    // デバッグ出力
-    std::cerr << "Legal moves: " << actionCount << std::endl;
-    for (const auto& move : legalMoves) {
-        std::cerr << move << " ";
-    }
-    std::cerr << std::endl;
 }
 
 std::string chooseMove(const std::vector<std::string>& legalMoves) {
@@ -107,7 +96,6 @@ std::string chooseMove(const std::vector<std::string>& legalMoves) {
 
     // 終盤ソルバーの適用判定
     if (EndgameSolver::isApplicable(g_currentBoard, 15)) {
-        std::cerr << "Using endgame solver" << std::endl;
         std::string move = EndgameSolver::solve(g_currentBoard);
 
         // 合法手チェック
@@ -124,11 +112,6 @@ std::string chooseMove(const std::vector<std::string>& legalMoves) {
     SearchEngine engine;
     SearchResult result = engine.search(g_currentBoard, 140); // 10ms余裕を持つ
 
-    std::cerr << "Search result: " << result.move
-              << ", score: " << result.score
-              << ", depth: " << result.depth
-              << ", nodes: " << result.nodes << std::endl;
-
     // 合法手チェック
     for (const auto& legal : legalMoves) {
         if (result.move == legal) {
@@ -137,6 +120,5 @@ std::string chooseMove(const std::vector<std::string>& legalMoves) {
     }
 
     // 探索結果が非法手なら、合法手の最初を返す
-    std::cerr << "Warning: Search returned illegal move, using first legal move" << std::endl;
     return legalMoves[0];
 }
