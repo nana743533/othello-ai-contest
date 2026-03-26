@@ -55,16 +55,13 @@ TEST(BitboardTest, LegalMoves) {
 TEST(BitboardTest, PlaceAndFlip) {
     Bitboard board = Bitboard::initial();
 
-    // 黒が e4 の隣の f4 に打つと、e4 の白が反転される...はずだが
-    // 実際には初期配置から黒が打てるのは c4, d3, e6, f5 のみ
-
-    // f5 に打つ場合
+    // f5は黒の合法手
     Bitboard after = board.placeAndFlip("f5");
 
-    // f5 に黒の石が置かれる
+    // f5に黒の石が置かれる
     EXPECT_TRUE(after.hasPlayerAt("f5"));
-    // f4 の白が黒に反転される（e4が黒でf4が白だから）
-    EXPECT_TRUE(after.hasPlayerAt("f4"));
+    // e5の白が黒に反転される
+    EXPECT_TRUE(after.hasPlayerAt("e5"));
 }
 
 // Bitboard 盤面パーステスト
@@ -73,8 +70,8 @@ TEST(BitboardTest, ParseFromString) {
         "........\n"
         "........\n"
         "........\n"
-        "...01...\n"
-        "...10...\n"
+        "...10...\n"  // d4=1(白), e4=0(黒)
+        "...01...\n"  // d5=0(黒), e5=1(白)
         "........\n"
         "........\n"
         "........\n";
