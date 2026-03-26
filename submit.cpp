@@ -455,7 +455,7 @@ private:
         int32_t bestScore = -1000000;
         while (legalMoves) {
             int lsb = __builtin_ctzll(legalMoves);
-            Bitboard nextBoard = board.placeAndFlip(lsb);
+            Bitboard nextBoard = board.placeAndFlip(lsb % 8, lsb / 8);
             int32_t score = -search(nextBoard.swap());
 
             if (score > bestScore) bestScore = score;
