@@ -3,6 +3,16 @@
 
 namespace othello {
 
+// static helper function
+static std::string bitToCoord(int bit) {
+    int x = bit % 8;
+    int y = bit / 8;
+    std::string coord;
+    coord += ('a' + x);
+    coord += ('1' + y);
+    return coord;
+}
+
 bool EndgameSolver::isApplicable(const Bitboard& board, int threshold) {
     return board.getEmptyCount() <= threshold;
 }
@@ -73,7 +83,9 @@ int32_t EndgameSolver::search(Bitboard board, bool isBlack) {
     // 各手を探索
     while (legalMoves) {
         int lsb = __builtin_ctzll(legalMoves);
-        Bitboard nextBoard = board.placeAndFlip(lsb);
+        int x = lsb % 8;
+        int y = lsb / 8;
+        Bitboard nextBoard = board.placeAndFlip(x, y);
 
         // 相手の番
         int32_t score = -search(nextBoard.swap(), !isBlack);
@@ -116,7 +128,9 @@ int8_t EndgameSolver::searchWLD(Bitboard board, bool isBlack) {
     int8_t result = -1;
     while (legalMoves) {
         int lsb = __builtin_ctzll(legalMoves);
-        Bitboard nextBoard = board.placeAndFlip(lsb);
+        int x = lsb % 8;
+        int y = lsb / 8;
+        Bitboard nextBoard = board.placeAndFlip(x, y);
 
         int8_t score = -searchWLD(nextBoard.swap(), !isBlack);
 
@@ -143,15 +157,6 @@ bool EndgameSolver::handlePass(Bitboard& board, bool& isBlack) {
     board = swapped;
     isBlack = !isBlack;
     return true;
-}
-
-std::string EndgameSolver::bitToCoord(int bit) {
-    int x = bit % 8;
-    int y = bit / 8;
-    std::string coord;
-    coord += ('a' + x);
-    coord += ('1' + y);
-    return coord;
 }
 
 } // namespace othello
