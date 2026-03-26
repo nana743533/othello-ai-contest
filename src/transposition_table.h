@@ -2,6 +2,7 @@
 #define OTHello_AI_TRANSPOSITION_TABLE_H
 
 #include "bitboard.h"
+#include "evaluator.h"
 #include <cstdint>
 #include <vector>
 
