@@ -1,7 +1,7 @@
 #ifndef OTHello_AI_SIMPLE_EVALUATOR_H
 #define OTHello_AI_SIMPLE_EVALUATOR_H
 
-#include "bitboard.h"
+#include "../core/bitboard.h"
 #include <string>
 
 namespace othello {

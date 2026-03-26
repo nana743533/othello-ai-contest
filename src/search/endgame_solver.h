@@ -1,7 +1,7 @@
 #ifndef OTHello_AI_ENDGAME_SOLVER_H
 #define OTHello_AI_ENDGAME_SOLVER_H
 
-#include "bitboard.h"
+#include "../core/bitboard.h"
 #include <cstdint>
 
 namespace othello {

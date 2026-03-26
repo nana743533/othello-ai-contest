@@ -1,8 +1,8 @@
 #ifndef OTHello_AI_TRANSPOSITION_TABLE_H
 #define OTHello_AI_TRANSPOSITION_TABLE_H
 
-#include "bitboard.h"
-#include "evaluator.h"
+#include "../core/bitboard.h"
+#include "../evaluators/evaluator.h"
 #include <cstdint>
 #include <vector>
 

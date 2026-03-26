@@ -1,8 +1,8 @@
 #ifndef OTHello_AI_SEARCH_H
 #define OTHello_AI_SEARCH_H
 
-#include "bitboard.h"
-#include "evaluator.h"
+#include "../core/bitboard.h"
+#include "../evaluators/evaluator.h"
 #include <vector>
 #include <chrono>
 #include <functional>
