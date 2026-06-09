@@ -85,3 +85,27 @@ EXPERT <座標>
 - 相手の石を0個にした場合、その時点で勝利となります。
 - 相手がタイムアウトまたは不正な行動をした場合も勝利となります。
 - 石の数が同じ場合は引き分け（Draw）となります。
+
+## 5. Java実装時の注意点（CodinGame環境）
+
+### 5.1. クラス名の制約
+
+CodinGameのJava実行環境は、エントリーポイントとして `Player` クラスを探します。
+そのため、メインクラスは **`Player` という名前** にする必要があります。
+
+```
+class Player {                     // OK
+    public static void main(String[] args) { ... }
+}
+```
+
+### 5.2. public クラスは避ける
+
+CodinGameのWeb IDEにコードを貼り付ける場合、ファイル名はIDE側で固定されています。
+`public class` を使うと「ファイル名とクラス名が一致しない」というコンパイルエラーになるため、
+**`public` を付けずに `class Player` と宣言** します。
+
+| 宣言 | 結果 |
+|------|------|
+| `public class Player` | ❌ ファイル名不一致エラー |
+| `class Player` | ✅ 正常動作 |
