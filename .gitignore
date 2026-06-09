@@ -1,0 +1,31 @@
+# === ビルド生成物 ===
+build/
+Testing/
+
+# === コンパイル済みバイナリ ===
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# === 静的ライブラリ ===
+*.a
+*.lib
+
+# === IDE・エディタ ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === OS ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
