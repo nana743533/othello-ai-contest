@@ -29,3 +29,6 @@ Desktop.ini
 __pycache__/
 *.pyc
 *.pyo
+
+# === Java ===
+*.class
