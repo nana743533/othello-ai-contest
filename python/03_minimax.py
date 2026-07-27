@@ -95,12 +95,14 @@ def apply_move(board, coord, player):
 
 
 def minimax(board, depth, current_player, me, alpha, beta):
-    """Alpha-Beta 付き Minimax。評価値と最善手を返す"""
+    """Alpha-Beta Minimax。me 目線の評価値と最善手を返す（相手は評価値最小化）"""
+    # 深さ 0 ならリーフ: 現在局面を評価して返す
     if depth == 0:
         return evaluate(board, me), None
 
     moves = get_legal_moves(board, current_player)
     if not moves:
+        # 合法手なし: 双方パスなら終局、そうでなければパスして手番交代
         if not get_legal_moves(board, 1 - current_player):
             return evaluate(board, me), None
         score, _ = minimax(board, depth - 1, 1 - current_player, me, alpha, beta)
@@ -108,6 +110,7 @@ def minimax(board, depth, current_player, me, alpha, beta):
 
     best_move = moves[0]
     if current_player == me:
+        # 自分の手番: 評価値が最大になる手を選ぶ
         best_score = float("-inf")
         for move in moves:
             next_board = apply_move(board, move, current_player)
@@ -120,6 +123,7 @@ def minimax(board, depth, current_player, me, alpha, beta):
                 break
         return best_score, best_move
 
+    # 相手の手番: 相手目線で最大 = 自分目線では評価値最小
     best_score = float("inf")
     for move in moves:
         next_board = apply_move(board, move, current_player)
