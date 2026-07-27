@@ -12,8 +12,10 @@ import sys
 def main():
     player_id = int(input())
     board_size = int(input())
+    turn = 0
 
     while True:
+        turn += 1
         # 盤面の状態（board_size 行）を読み飛ばす
         for _ in range(board_size):
             input()
@@ -22,10 +24,11 @@ def main():
         action_count = int(input())
         legal_moves = [input().strip() for _ in range(action_count)]
 
+        msg = f"t{turn},{action_count}"
         if not legal_moves:
-            print("pass")
+            print(f"pass MSG {msg}")
         else:
-            print(random.choice(legal_moves))
+            print(f"{random.choice(legal_moves)} MSG {msg}")
 
         sys.stdout.flush()
 
