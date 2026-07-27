@@ -84,6 +84,7 @@ def measure_once(mod, board, me, repeats: int) -> tuple[str, int, list[float]]:
 
 
 def run_bench(args) -> int:
+    """空きマス・シードごとに終盤読みのレイテンシを計測して表示する"""
     mod = load_endgame_module()
     empties = [int(x) for x in args.empties.split(",")]
     seeds = list(range(args.seeds))
@@ -141,6 +142,7 @@ def run_bench(args) -> int:
 
 
 def main():
+    """CLI 引数を解釈してベンチマークを実行する"""
     parser = argparse.ArgumentParser(
         description="041_endgame.py 終盤完全読みのレイテンシ計測"
     )
