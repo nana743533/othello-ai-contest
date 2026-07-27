@@ -23,6 +23,7 @@ DIRS = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
 
 
 def cell_weight(x, y):
+    """座標 (x, y) の位置重みを返す"""
     return W[y][x]
 
 
@@ -39,6 +40,7 @@ def evaluate(board, me):
 
 
 def get_flips(board, x, y, player):
+    """(x, y) に player が打ったとき反転するマス一覧"""
     opponent = str(1 - player)
     me = str(player)
     flips = []
@@ -55,20 +57,24 @@ def get_flips(board, x, y, player):
 
 
 def is_legal(board, x, y, player):
+    """(x, y) が player の合法手かどうか"""
     if board[y][x] != ".":
         return False
     return bool(get_flips(board, x, y, player))
 
 
 def to_coord(x, y):
+    """盤面座標を CodinGame 形式（例: d3）に変換"""
     return chr(ord("a") + x) + str(y + 1)
 
 
 def from_coord(coord):
+    """CodinGame 形式（例: d3）を盤面座標 (x, y) に変換"""
     return ord(coord[0]) - ord("a"), int(coord[1]) - 1
 
 
 def get_legal_moves(board, player):
+    """player の合法手を重み降順で返す"""
     moves = []
     for y in range(8):
         for x in range(8):
@@ -79,6 +85,7 @@ def get_legal_moves(board, player):
 
 
 def apply_move(board, coord, player):
+    """coord に player の石を置き、反転後の盤面を返す"""
     x, y = from_coord(coord)
     new_board = [list(row) for row in board]
     new_board[y][x] = str(player)
@@ -88,6 +95,7 @@ def apply_move(board, coord, player):
 
 
 def minimax(board, depth, current_player, me, alpha, beta):
+    """Alpha-Beta 付き Minimax。評価値と最善手を返す"""
     if depth == 0:
         return evaluate(board, me), None
 
@@ -146,6 +154,7 @@ def choose_move(board, legal_moves, me):
 
 
 def main():
+    """CodinGame 入出力ループ。最善手と先読み評価値を出力"""
     me = int(input())
     board_size = int(input())
 
